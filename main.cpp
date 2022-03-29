@@ -7,7 +7,7 @@ struct Common_resource {
 };
 
 using Buff_p                = uint8_t *;
-using Buff_p_same           = uint8_t[];
+using Buff_p_same           = uint8_t[];    // todo??: is this really the same, apparently not, but it decays to a pointer?
 using Buff_sp               = std::shared_ptr< uint8_t[1024] >;
 using Buff_sp_open          = std::shared_ptr< uint8_t[] >;
 using Buff_sp_uint8         = std::shared_ptr< uint8_t >;
