@@ -21,7 +21,7 @@ void Resource_user1_fn( Common_resource_up   cr ) { cr->my_int = 42; }// todo??:
 void Resource_user2_fn( Common_resource_up   cr ) { cr->my_int = 43; }
 void Resource_user3_fn( Common_resource_up & cr ) { cr->my_int = 44; }
 void Resource_user4_fn( Common_resource_up & cr ) { cr->my_int = 45; }
-
+// shared_ptr overloads
 int  Resource_user1_fn( Common_resource_sp   cr ) { return cr->my_int = 42; }
 int  Resource_user2_fn( Common_resource_sp   cr ) { return cr->my_int = 43; }
 
@@ -29,12 +29,12 @@ int main() {
   u_int8_t              buff[1024]                      { 99 };  // to fill it: https://stackoverflow.com/questions/69009464/populating-a-buffer-in-c
   u_int8_t              buff2[]                         { 99,98,97,0 };  // to fill it: https://stackoverflow.com/questions/69009464/populating-a-buffer-in-c
   Buff_p                buff_p                          { new uint8_t[1024] {99} } ;
-  cout << sizeof(buff) << "," << sizeof(buff_p) <<"," << buff2 << endl;
+                                                            cout << sizeof(buff) << "," << sizeof(buff_p) <<"," << buff2 << endl;
   // make a sp to the buffer, not the pointer.
   shared_ptr<uint8_t[]> buff_sp1                        { shared_ptr<uint8_t []> {new uint8_t[1024]}};
   unique_ptr<uint8_t[]> buff_up1                        { unique_ptr<uint8_t []> {new uint8_t[1024]}};
   //shared_ptr<uint8_t[]> buff_sp4                        { make_shared<uint8_t []>(1024) };
-  //unique_ptr<uint8_t[]> buff_up4                        { make_unique<uint8_t []>(1024) };
+  unique_ptr<uint8_t[]> buff_up4                        { make_unique<uint8_t []>(1024) };
   //auto                  buff_sp2                        { make_shared<uint8_t [1024]> }; // todo??: shared_ptr<uint8_t[1024]> *() buff_sp3                        { make_shared<uint8_t [1024]> };
   //Buff_sp_same_to_ptr   buff_sp2                        { shared_ptr<Buff_p_same> {new Buff_p_same}};  // todo??: is this a pointer to a pointer?
   //auto                  junk { new uint8_t (1024)};
@@ -43,14 +43,11 @@ int main() {
   //shared_ptr<u_int8_t>  buff_sp4                        { shared_ptr<uint8_t > {new uint8_t}};
   //shared_ptr<u_int8_t>  buff_sp3                        { buff_p};  // todo: works because of type deduction?
 
-
   //Buff_sp               buff_sp                         { make_shared< uint8_t[1024]>() };  //todo:?? not allowed via static assert in lib.
   //Buff_sp_open          buff_sp_open                    { make_shared< uint8_t[]>() };  //todo:?? not allowed via static assert in lib.
 
-
-
   u_int8_t              archive[1024*1024]              { 98 };  // to fill it: https://stackoverflow.com/questions/69009464/populating-a-buffer-in-c
-  //Common_resource       common_resource                 { 99,"str" };
+  /* //Common_resource       common_resource                 { 99,"str" };
 
   //Common_resource_up    common_resource_up1             { new Common_resource {99,"str"} };
   //Common_resource_up    common_resource_up_copy1up1     { common_resource_up1.get() };
@@ -84,11 +81,23 @@ int main() {
   //Common_resource_sp    common_resource_spB = make_shared< Common_resource >();
 
   //Common_resource_sp common_resource_sp      { new Common_resource {} };
-//  Common_resource_sp common_resource_sp_copy { common_resource_sp };
+  //Common_resource_sp common_resource_sp_copy { common_resource_sp };
   //cout << "sp1: "<<Resource_user1_fn( common_resource_sp )<<endl;
   //common_resource_sp->my_int = 98;
   //Resource_user1_fn( common_resource_sp );
   //cout << "sp2: "<<Resource_user2_fn( common_resource_sp )<<endl;
+  */
+
+  int * array_int_ptr[] { new int(100), new int(200) };
+  //vector<int*> vec_int_ptr1 { make_move_iterator(begin(array_int_ptr)), make_move_iterator(end(array_int_ptr)) };  // todo??: what is make_move_iterator?
+  //vector<int*> vec_int_ptr2 { begin(array_int_ptr), end(array_int_ptr) };  // todo??: what is make_move_iterator?
+
+  unique_ptr<int> array_unique[] { std::make_unique<int>(100), std::make_unique<int>(200) };
+  vector<unique_ptr<int>> vec_int_uptr1 { make_move_iterator(begin(array_unique)), make_move_iterator(end(array_unique)) };  // todo??: what is make_move_iterator?
+
+  shared_ptr<int> array_shared[] { std::make_shared<int>(100), std::make_shared<int>(200) };
+  vector<shared_ptr<int>> vec_int_sptr1 { make_move_iterator(begin(array_shared)), make_move_iterator(end(array_shared)) };  // todo??: what is make_move_iterator?
+  vector<shared_ptr<int>> vec_int_sptr2 { begin(array_shared), end(array_shared) };  // todo??: don't need make_move_iterator
 
   cout << "###" << endl;
   return 0;
